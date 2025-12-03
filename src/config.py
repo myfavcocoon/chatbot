@@ -23,8 +23,8 @@ HF_TOKEN = os.environ.get("HF_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 # ----------------- BM25 params -----------------
-BM25_K1 = 0.5
-BM25_B = 0.0
+BM25_K1 = 1.2
+BM25_B = 0.5
 BM25_TOPK = 5
 
 # ----------------- RRF -----------------
@@ -66,6 +66,7 @@ LAW_SHORT_NAMES = [
     "thông tư 20 2022",
     "luật thuế thu nhập cá nhân",
     "luật doanh nghiệp"
+    "luật thuế doanh nghiệp"
 ]
 
 MODEL_OPTIONS = {
@@ -78,9 +79,10 @@ MODEL_OPTIONS = {
         "adapter_dir": os.path.join(BASE_DIR, "models", "qwen2-7b"),
     },
     "llama-3b": {
-        "base_model": "meta-llama/Llama-3B-hf",
+        "base_model": "meta-llama/Llama-3.2-3B-Instruct",
         "adapter_dir": os.path.join(BASE_DIR, "models", "llama-3b"),
     }
+
 }
 
 # # ----------------- Stopwords -----------------
