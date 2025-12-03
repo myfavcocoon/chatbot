@@ -1,6 +1,10 @@
-from .config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
-from .bm25_manager import BM25Retriever
-from .pinecone_manager import search_pinecone, embed_text
+# from .config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
+# from .bm25_manager import BM25Retriever
+# from .pinecone_manager import search_pinecone, embed_text
+
+from config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
+from bm25_manager import BM25Retriever
+from pinecone_manager import search_pinecone, embed_text
 
 from scipy.spatial.distance import cosine
 from sentence_transformers import SentenceTransformer
@@ -148,10 +152,10 @@ if __name__ == "__main__":
         retrieval_cache,
         bm25_retriever=bm25_retriever,
         embedding_model=embedding_model,
-        top_k=5,
+        top_k=3,
         pinecone_weight=2.0
     )
 
     print("\n===== Context Preview =====")
-    print(context_text[:300].replace("\n", "\\n"), "...")
+    print(context_text)
     print("Cache hit:", cache_hit, "Cosine score:", cosine_score)

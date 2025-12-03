@@ -1,11 +1,10 @@
-
 import os
 import json
 import string
 import re
 from rank_bm25 import BM25Okapi
 from unidecode import unidecode
-from .config import (
+from config import (
     STOPWORDS_FILE, BASE_DIR, LAW_SHORT_NAMES,
     BM25_K1, BM25_B, BM25_TOPK
 )
@@ -96,14 +95,31 @@ class BM25Retriever:
         results = []
         for idx, score in ranked:
             meta = self.metadata[idx]
+
+            # Xử lý clause_text: bỏ tag cũ (lấy từ space thứ 3 trở đi)
+            clause_text = meta.get("clause_text", "")
+            parts = clause_text.split(" ", 3)
+            if len(parts) >= 4:
+                actual_text = parts[3].strip()
+            else:
+                actual_text = clause_text
+
+            # Thêm prefix "Khoản a, Điều b, Luật c:"
+            clause_no = meta.get("clause_no", "")
+            article_title = meta.get("article_title", "")
+            law_title = meta.get("law_title", "")
+            prefix = f"Khoản {clause_no}, {article_title}, {law_title}:"
+
+            full_text = f"{prefix} {actual_text}"
+
             results.append({
                 "id": meta["id"],
                 "score": float(score),
-                "law_title": meta.get("law_title", ""),
-                "article_title": meta.get("article_title", ""),
-                "clause_no": meta.get("clause_no", ""),
+                "law_title": law_title,
+                "article_title": article_title,
+                "clause_no": clause_no,
                 "article_link": meta.get("article_link", ""), 
-                "text": meta.get("clause_text", "")
+                "text": full_text
             })
 
         return results
@@ -122,4 +138,4 @@ if __name__ == "__main__":
     print("\nTop 5 BM25 Results:\n")
     for r in results:
         print(f"ID: {r['id']} | Score: {r['score']:.4f} | Điều {r['clause_no']} | Link {r['article_link']}")
-        print("TEXT:", r["text"][:100], "...\n")
+        print("TEXT:", r["text"][:200], "...\n")

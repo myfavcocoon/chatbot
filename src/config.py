@@ -23,8 +23,8 @@ HF_TOKEN = os.environ.get("HF_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 # ----------------- BM25 params -----------------
-BM25_K1 = 1.2
-BM25_B = 0.5
+BM25_K1 = 1.0
+BM25_B = 0.2
 BM25_TOPK = 5
 
 # ----------------- RRF -----------------
