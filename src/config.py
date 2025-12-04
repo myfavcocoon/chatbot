@@ -88,6 +88,7 @@ MODEL_OPTIONS = {
 # # ----------------- Stopwords -----------------
 
 STOPWORDS_FILE = os.path.join(BASE_DIR, r"data\vietnamese-stopwords.txt")
+MODEL_KEY = "qwen2-3b"
 if __name__ == "__main__":
     print("===== DEBUG CONFIG =====")
 

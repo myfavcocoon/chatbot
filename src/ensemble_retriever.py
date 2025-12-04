@@ -1,11 +1,6 @@
-# from .config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
-# from .bm25_manager import BM25Retriever
-# from .pinecone_manager import search_pinecone, embed_text
-
-from config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
-from bm25_manager import BM25Retriever
-from pinecone_manager import search_pinecone, embed_text
-
+from .config import RRF_K, COSINE_THRESHOLD, BM25_TOPK, PINECONE_TOP_K, EMBED_MODEL_NAME
+from .bm25_manager import BM25Retriever
+from .pinecone_manager import search_pinecone, embed_text
 from scipy.spatial.distance import cosine
 from sentence_transformers import SentenceTransformer
 

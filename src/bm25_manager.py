@@ -4,7 +4,7 @@ import string
 import re
 from rank_bm25 import BM25Okapi
 from unidecode import unidecode
-from config import (
+from .config import (
     STOPWORDS_FILE, BASE_DIR, LAW_SHORT_NAMES,
     BM25_K1, BM25_B, BM25_TOPK
 )

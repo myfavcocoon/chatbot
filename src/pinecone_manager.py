@@ -1,7 +1,7 @@
 import os
 from sentence_transformers import SentenceTransformer
 import torch
-from config import BASE_DIR, PINECONE_API_KEY, PINECONE_INDEX_NAME, EMBED_MODEL_NAME, PINECONE_TOP_K
+from .config import BASE_DIR, PINECONE_API_KEY, PINECONE_INDEX_NAME, EMBED_MODEL_NAME, PINECONE_TOP_K
 from pinecone import Pinecone
 
 # -----------------------
