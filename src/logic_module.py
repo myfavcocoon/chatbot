@@ -111,7 +111,7 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
     for item in recent_history:
         context_lines.append(f"Q: {item['user']}")
         context_lines.append(f"A: {item['assistant']}")
-    dectx_query = decontextualize_conversation(context_lines, user_input)
+    dectx_query = decontextualize_conversation(context_lines, user_input, DEBUG = True)
 
     # -------- 3) Retrieval ----------
     context, refs, retrieval_cache, cache_hit, cosine_score = build_context(
