@@ -13,6 +13,8 @@ from .pinecone_manager import search_pinecone
 from .ensemble_retriever import build_context
 from .model_loader import build_pipeline
 from .decontextualizer import decontextualize_conversation  
+from .postprocessing import clean_text
+
 # -------------------- 1️⃣ MongoDB --------------------
 client = MongoClient(MONGO_URI)
 db = client[MONGO_DB]
@@ -125,8 +127,8 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
     full_prompt = custom_template.format(context=context, input=dectx_query)
     ans_full = gen_pipe(full_prompt)[0]["generated_text"]
     split_token = "### Trả lời:"
-    ans = ans_full.split(split_token, 1)[1].strip() if split_token in ans_full else ans_full.strip()
-
+    raw_ans = ans_full.split(split_token, 1)[1].strip() if split_token in ans_full else ans_full.strip()
+    ans = clean_text(raw_ans)
     # -------- 5) Update UI history ----------
     gr_history = gr_history or []
     gr_history.append((user_input, ans))

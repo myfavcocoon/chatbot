@@ -108,7 +108,11 @@ class BM25Retriever:
             clause_no = meta.get("clause_no", "")
             article_title = meta.get("article_title", "")
             law_title = meta.get("law_title", "")
-            prefix = f"Khoản {clause_no}, {article_title}, {law_title}:"
+
+            if str(clause_no) == "0":
+                prefix = f"{article_title}, {law_title}:"
+            else:
+                prefix = f"Khoản {clause_no}, {article_title}, {law_title}:"
 
             full_text = f"{prefix} {actual_text}"
 
@@ -137,5 +141,5 @@ if __name__ == "__main__":
     print(f"\n🔎 Query: {query}")
     print("\nTop 5 BM25 Results:\n")
     for r in results:
-        print(f"ID: {r['id']} | Score: {r['score']:.4f} | Điều {r['clause_no']} | Link {r['article_link']}")
+        print(f"ID: {r['id']} | Score: {r['score']:.4f} | Khoản {r['clause_no']} | Link {r['article_link']}")
         print("TEXT:", r["text"][:200], "...\n")
