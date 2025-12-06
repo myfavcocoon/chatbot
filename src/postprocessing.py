@@ -17,54 +17,57 @@ def cut_after_question(text: str) -> str:
 
 
 # =====================================================================
-# 2. Tách câu
+# 2. Tách câu nhưng GIỮ newline để preserve format
 # =====================================================================
-def split_sentences(text: str):
-    # Tách câu bằng ., !, ?, hoặc xuống dòng
-    sents = re.split(r'(?<=[.!?])\s+|\n+', text)
-    return [s.strip() for s in sents if s.strip()]
+def split_sentences_with_newline(text: str):
+    # Tách thành list: [sentence, newline, sentence, newline, ...]
+    parts = re.split(r'(?<=[.!?])(\s+|\n+)', text)
 
-
-# =====================================================================
-# 2.5. Loại câu chứa dấu ngoặc ()
-# =====================================================================
-def remove_parenthesis_sentences(sentences):
-    output = []
-    for s in sentences:
-        if "(" in s or ")" in s:
+    items = []
+    for i in range(0, len(parts), 2):
+        sent = parts[i].strip()
+        if not sent:
             continue
-        output.append(s)
+        newline = parts[i + 1] if i + 1 < len(parts) else ""
+        items.append({"text": sent, "newline": newline})
+    return items
+
+
+# =====================================================================
+# 3. Loại câu chứa dấu ngoặc ()
+# =====================================================================
+def remove_parenthesis_items(items):
+    output = []
+    for item in items:
+        if "(" in item["text"] or ")" in item["text"]:
+            continue
+        output.append(item)
     return output
 
 
 # =====================================================================
-# 3. Loại câu trùng hoàn toàn
+# 4. Loại trùng exact + fuzzy (so sánh theo TEXT, giữ lại newline)
 # =====================================================================
-def dedupe_exact(sentences):
-    seen = set()
-    output = []
-    for s in sentences:
-        if s not in seen:
-            seen.add(s)
-            output.append(s)
-    return output
+def dedupe_items(items, threshold=92):
+    out = []
+    seen = []
 
+    for item in items:
+        s = item["text"]
 
-# =====================================================================
-# 4. Loại câu tương tự (fuzzy dedupe)
-# =====================================================================
-def dedupe_fuzzy(sentences, threshold=92):
-    result = []
-    for s in sentences:
-        if not result:
-            result.append(s)
+        if not seen:
+            seen.append(s)
+            out.append(item)
             continue
 
-        sim = fuzz.ratio(s, result[-1])
+        # fuzzy với ALL câu đã thấy
+        sim = max(fuzz.ratio(s, prev) for prev in seen)
+
         if sim < threshold:
-            result.append(s)
+            seen.append(s)
+            out.append(item)
 
-    return result
+    return out
 
 
 # =====================================================================
@@ -72,84 +75,40 @@ def dedupe_fuzzy(sentences, threshold=92):
 # =====================================================================
 def clean_text(raw_text: str) -> str:
     # 1. Cắt phần từ “Câu hỏi:” trở xuống
-    t = cut_after_question(raw_text)
+    text = cut_after_question(raw_text)
 
-    # 2. Tách câu
-    sentences = split_sentences(t)
+    # 2. Tách câu + preserve newline
+    items = split_sentences_with_newline(text)
 
-    # 2.5. Loại câu có dấu ngoặc ()
-    sentences = remove_parenthesis_sentences(sentences)
+    # 3. Remove câu chứa ngoặc ()
+    items = remove_parenthesis_items(items)
 
-    # 3. Loại trùng exact
-    sentences = dedupe_exact(sentences)
+    # 4. Dedupe exact + fuzzy
+    items = dedupe_items(items)
 
-    # 4. Loại trùng fuzzy
-    sentences = dedupe_fuzzy(sentences)
-
-    # 5. Ghép lại
-    return " ".join(sentences)
+    # 5. Ghép lại, giữ format gốc
+    return "".join([item["text"] + item["newline"] for item in items])
 
 
 if __name__ == "__main__":
-    sample = """
-Công ty là doanh nghiệp. Theo Khoản 1, Điều 4, Luật Doanh nghiệp, doanh nghiệp là tổ chức có tên riêng, có tài sản, có trụ sở giao dịch, được thành lập hoặc đăng ký thành lập theo quy định của pháp luật nhằm mục đích kinh doanh. Công ty cổ phần, công ty trách nhiệm hữu hạn, công ty hợp danh, doanh nghiệp tư nhân đều là loại hình doanh nghiệp.
+    TEST_INPUT = """
+Công ty là doanh nghiệp. Công ty là doanh nghiệp.  
 
-Tuy nhiên, công ty cũng có thể là một loại hình doanh nghiệp khác như công ty TNHH, công ty CP, công ty HD, DNTN, DTPN. Mỗi loại hình doanh nghiệp có những đặc điểm riêng về vốn điều lệ, cổ đông, trách nhiệm và quyền lợi của cổ đông.
-
-Ngoài ra, công ty cũng có thể là công ty TNHH, công ty CP, công ty HD, DNTN, DTPN. Mỗi loại hình doanh nghiệp có những đặc điểm riêng về vốn điều lệ, cổ đông, trách nhiệm và quyền lợi của cổ đông.
-
-Vì vậy, công ty là doanh nghiệp.
-
-Nếu bạn cần thêm thông tin chi tiết về các loại hình doanh nghiệp, vui lòng cung cấp thêm ngữ cảnh pháp lý.
-
-Nếu bạn cần thêm thông tin chi tiết về các loại hình doanh nghiệp, vui lòng cung cấp thêm ngữ cảnh.
-
-Nếu bạn có bất kỳ câu hỏi nào khác, tôi sẵn sàng hỗ trợ.
-
-Nếu bạn có bất kỳ câu hỏi nào khác, tôi sẵn sàng hỗ trợ.
-
-Cảm ơn bạn đã sử dụng dịch vụ của tôi. Chúc bạn một ngày tốt lành!
+Theo Khoản 1, Điều 4, Luật Doanh nghiệp, doanh nghiệp là tổ chức có tên riêng, có tài sản, có trụ sở giao dịch. 
+Doanh nghiệp là tổ chức có tên riêng, có tài sản, có trụ sở giao dịch!  
 
 (Trợ lý pháp lý AI)
+
+Nếu bạn cần thêm thông tin, vui lòng cung cấp thêm ngữ cảnh.
+Nếu bạn cần thêm thông tin, vui lòng cung cấp thêm ngữ cảnh.
+Nếu bạn cần thêm thông tin vui lòng cung cấp thêm ngữ cảnh.  
+
+Cảm ơn bạn đã sử dụng dịch vụ của tôi.  
+Cảm ơn bạn đã sử dụng dịch vụ của tôi!  
 
 Câu hỏi:
-Theo Luật Doanh nghiệp, công ty TNHH, công ty CP, công ty HD, DNTN, DTPN có phải là các loại hình doanh nghiệp riêng biệt không?
-
-Trả lời
-Các loại hình doanh nghiệp như công ty TNHH, công ty CP, công ty HD, DNTN, DTPN đều là các loại hình doanh nghiệp riêng biệt. Mỗi loại hình doanh nghiệp có những đặc điểm riêng về vốn điều lệ, cổ đông, trách nhiệm và quyền lợi của cổ đông.
-
-Ví dụ, công ty TNHH là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; công ty CP là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; công ty HD là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; doanh nghiệp TN là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần.
-
-Nếu bạn cần thêm thông tin chi tiết về các loại hình doanh nghiệp, vui lòng cung cấp thêm ngữ cảnh pháp lý.
-
-Nếu bạn có bất kỳ câu hỏi nào khác, tôi sẵn sàng hỗ trợ.
-
-Cảm ơn bạn đã sử dụng dịch vụ của tôi. Chúc bạn một ngày tốt lành!
-
-(Trợ lý pháp lý AI)
-
-Câu hỏi:
-Công ty TNHH, công ty CP, công ty HD, DNTN, DTPN có phải là các loại hình doanh nghiệp riêng biệt không?
-
-Trả lời
-Các loại hình doanh nghiệp như công ty TNHH, công ty CP, công ty HD, DNTN, DTPN đều là các loại hình doanh nghiệp riêng biệt. Mỗi loại hình doanh nghiệp có những đặc điểm riêng về vốn điều lệ, cổ đông, trách nhiệm và quyền lợi của cổ đông.
-
-Ví dụ, công ty TNHH là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; công ty CP là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; công ty HD là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần; doanh nghiệp TN là doanh nghiệp có vốn điều lệ được chia thành nhiều phần bằng nhau gọi là cổ phần.
-
-Nếu bạn cần thêm thông tin chi tiết về các loại hình doanh nghiệp, vui lòng cung cấp thêm ngữ cảnh pháp lý.
-
-Nếu bạn có bất kỳ câu hỏi nào khác, tôi sẵn sàng hỗ trợ.
-
-Cảm ơn bạn đã sử dụng dịch vụ của tôi. Chúc bạn một ngày tốt lành!
-
-(Trợ lý pháp lý AI)
-
-Câu hỏi
-Công ty TNHH, công ty CP, công ty HD, DNTN, DTPN có phải là các loại hình doanh nghiệp riêng biệt không?
-
-Trả lời
-Các loại hình doanh nghiệp như công ty TNHH, công ty CP, công ty HD, DNTN, DTPN đều là các loại hình doanh nghiệp riêng biệt. Mỗi loại hình doanh nghiệp có những đặc điểm riêng về vốn điều lệ, cổ đông, trách
-    """
+Công ty TNHH có phải là doanh nghiệp không?
+"""
 
     print("\n====== CLEANED OUTPUT ======\n")
-    print(clean_text(sample))
+    print(clean_text(TEST_INPUT))
