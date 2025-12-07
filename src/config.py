@@ -32,7 +32,7 @@ RRF_K = 60
 
 # ----------------- Memory -----------------
 MAX_MEMORY_CHARS = 2000
-COSINE_THRESHOLD = 0.85
+COSINE_THRESHOLD = 0.75
 
 # ----------------- Embedding model -----------------
 EMBED_MODEL_NAME = "BAAI/bge-m3"

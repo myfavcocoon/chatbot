@@ -97,7 +97,7 @@ def extract_text(doc):
 # ============================================================
 # Build context
 # ============================================================
-def build_context(query, retrieval_cache, bm25_retriever=None, embedding_model=None, top_k=5, pinecone_weight=3):
+def build_context(query, retrieval_cache, bm25_retriever=None, embedding_model=None, top_k=5, pinecone_weight=1.5):
     query_vec = embed_text(query) if embedding_model else None
     cache_hit = False
     cosine_score = None
@@ -148,7 +148,6 @@ if __name__ == "__main__":
         bm25_retriever=bm25_retriever,
         embedding_model=embedding_model,
         top_k=3,
-        pinecone_weight=2.0
     )
 
     print("\n===== Context Preview =====")

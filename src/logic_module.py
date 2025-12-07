@@ -109,11 +109,17 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
     recent_history = doc.get("recent_history", []) or []
 
     # -------- 2) Decontextualize query ----------
-    context_lines = []
-    for item in recent_history:
-        context_lines.append(f"Q: {item['user']}")
-        context_lines.append(f"A: {item['assistant']}")
-    dectx_query = decontextualize_conversation(context_lines, user_input, DEBUG = True)
+    if len(recent_history) == 0:
+        # Không có history → Không cần decontext
+        dectx_query = user_input.strip()
+        cache_hit = False
+    else:
+        # Có history → Chạy decontext
+        context_lines = []
+        for item in recent_history:
+            context_lines.append(f"Q: {item['user']}")
+            context_lines.append(f"A: {item['assistant']}")
+        dectx_query = decontextualize_conversation(context_lines, user_input, DEBUG=True)
 
     # -------- 3) Retrieval ----------
     context, refs, retrieval_cache, cache_hit, cosine_score = build_context(
@@ -127,8 +133,8 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
     full_prompt = custom_template.format(context=context, input=dectx_query)
     ans_full = gen_pipe(full_prompt)[0]["generated_text"]
     split_token = "### Trả lời:"
-    raw_ans = ans_full.split(split_token, 1)[1].strip() if split_token in ans_full else ans_full.strip()
-    ans = clean_text(raw_ans)
+    ans = ans_full.split(split_token, 1)[1].strip() if split_token in ans_full else ans_full.strip()
+    ans = clean_text(ans)
     # -------- 5) Update UI history ----------
     gr_history = gr_history or []
     gr_history.append((user_input, ans))
