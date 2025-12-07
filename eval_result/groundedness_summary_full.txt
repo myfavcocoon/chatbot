@@ -1,0 +1,36 @@
+
+=== File: base_qwen2_3b_groundedness.csv ===
+=== Groundedness Score Distribution ===
+Score 0.0: 61 responses
+Score 0.25: 30 responses
+Score 0.5: 57 responses
+Score 0.75: 31 responses
+Score 1.0: 121 responses
+Total Groundedness score (sum): 180.25
+
+=== File: llama_3b_groundedness.csv ===
+=== Groundedness Score Distribution ===
+Score 0.0: 47 responses
+Score 0.25: 21 responses
+Score 0.5: 93 responses
+Score 0.75: 14 responses
+Score 1.0: 125 responses
+Total Groundedness score (sum): 187.25
+
+=== File: qwen2_3b_groundedness.csv ===
+=== Groundedness Score Distribution ===
+Score 0.0: 37 responses
+Score 0.25: 12 responses
+Score 0.5: 83 responses
+Score 0.75: 30 responses
+Score 1.0: 138 responses
+Total Groundedness score (sum): 205.0
+
+=== File: qwen2_7b_groundedness.csv ===
+=== Groundedness Score Distribution ===
+Score 0.0: 46 responses
+Score 0.25: 7 responses
+Score 0.5: 25 responses
+Score 0.75: 11 responses
+Score 1.0: 211 responses
+Total Groundedness score (sum): 233.5
