@@ -3,7 +3,7 @@
 import time
 from typing import List
 import google.generativeai as genai
-from .config import GEMINI_API_KEY
+from config import GEMINI_API_KEY
 
 
 def decontextualize_conversation(context: List[str], question: str, DEBUG: bool = False) -> str:
@@ -16,22 +16,24 @@ def decontextualize_conversation(context: List[str], question: str, DEBUG: bool 
 
     ctx_text = "\n".join(context)
     prompt = f"""
-Bạn là một trợ lý AI thông minh, có nhiệm vụ viết lại câu hỏi của người dùng sao cho đầy đủ thông tin, độc lập, và dễ hiểu **bằng tiếng Việt**.
+    Bạn là trợ lý AI pháp lý, nhiệm vụ của bạn là **chỉ làm rõ câu hỏi nếu nó thiếu thông tin cần thiết để hiểu độc lập**, bằng **tiếng Việt**, thật ngắn gọn, đúng luật, không thêm từ ngữ thừa.
 
-Hướng dẫn:
-- Nếu câu hỏi phụ thuộc vào hội thoại trước đó, hãy giải quyết tất cả **tham chiếu (coreferences)** và đảm bảo câu hỏi có thể hiểu được **một mình**.
-- Không bỏ sót bất kỳ thông tin quan trọng nào.
-- Giữ nguyên ý nghĩa gốc của câu hỏi.
-- Không lặp lại những câu hỏi đã xuất hiện trong đoạn hội thoại trước.
-- Nếu câu hỏi không liên quan đến ngữ cảnh trước, không cần sửa, giữ nguyên câu hỏi.
+    Hướng dẫn:
 
-Hội thoại trước đó:
-{ctx_text}
+    - Nếu câu hỏi đã đủ ý, độc lập, và rõ ràng → **giữ nguyên nguyên văn, không sửa một chữ nào**.
+    - Nếu câu hỏi thiếu thông tin tham chiếu trong hội thoại trước đó → bổ sung thông tin cần thiết để câu hỏi có thể hiểu được độc lập.
+    - Nếu câu hỏi không liên quan đến luật (ví dụ small talk, hỏi chuyện ngoài luật) → giữ nguyên câu hỏi, không sửa.
+    - Không lặp lại câu hỏi cũ.
+    - Không thêm lời mở đầu, kết thúc, hay giải thích gì. Chỉ trả về câu hỏi cuối cùng đã chỉnh sửa nếu cần.
 
-Câu hỏi mới: {question}
+    Hội thoại trước đó:
+    {ctx_text}
 
-Viết lại câu hỏi:
-"""
+    Câu hỏi mới: {question}
+
+    Viết lại câu hỏi (hoặc giữ nguyên nếu đủ ý):
+    """
+
 
     start = time.time()
     try:
@@ -62,7 +64,9 @@ if __name__ == "__main__":
 
     # Danh sách các câu hỏi mới và câu trả lời mẫu tương ứng
     test_qas = [
-        ("đường link đăng nhập vào cổng thông tin quốc gia là gì?", 
+        ("cách thành lập doanh nghiệp", 
+         "bạn có thể đăng ký qua cổng thông tin điên tử"),        
+        ("link là gì?", 
          "Bạn có thể truy cập Cổng thông tin quốc gia về đăng ký doanh nghiệp tại https://dangkykinhdoanh.gov.vn"),
         ("Doanh nghiệp cần làm gì nếu vi phạm luật lao động?", 
          "Doanh nghiệp phải thực hiện các biện pháp khắc phục và có thể bị xử phạt theo quy định."),
@@ -70,8 +74,8 @@ if __name__ == "__main__":
          "Người đại diện pháp luật của doanh nghiệp chịu trách nhiệm chính."),
         ("Mức phạt tối đa đối với hành vi xả thải trái phép là bao nhiêu?", 
          "Mức phạt có thể lên tới 500 triệu đồng tùy theo loại vi phạm."),
-        ("Thời hạn để nộp hồ sơ đăng ký doanh nghiệp là bao lâu?", 
-         "Thời hạn nộp hồ sơ đăng ký doanh nghiệp là 3 ngày làm việc kể từ khi chuẩn bị đầy đủ hồ sơ.")
+        ("Ok cảm ơn bạn", 
+         "kcj.")
     ]
 
     print("=== Running batch tests with Q&A ===\n")

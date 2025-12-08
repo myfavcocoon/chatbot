@@ -116,7 +116,7 @@ def build_context(query, retrieval_cache, bm25_retriever=None, embedding_model=N
         raise ValueError("bm25_retriever must be provided and initialized")
 
     bm25_docs = bm25_retriever.search(query, BM25_TOPK)
-    pine_docs = search_pinecone(query, PINECONE_TOP_K)
+    pine_docs = search_pinecone(query_vec, PINECONE_TOP_K)
     final_docs = ensemble_rrf(bm25_docs, pine_docs, k=RRF_K, pinecone_weight=pinecone_weight)
 
     # Cắt top_k doc sau RRF
