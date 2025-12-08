@@ -96,7 +96,7 @@ Bạn là trợ lý pháp lý AI. Luôn trả lời chính xác theo luật Vi�
 """
 
 
-def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
+def chat_fn(session_id, gr_history, user_input, retrieval_cache):
     """Chat function chính, chỉ quan tâm user_input và recent_history"""
     if not session_id:
         session_id = create_session("Phiên mới")
@@ -156,9 +156,19 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
     .ref-card:hover { background:#eef3f9; border-color:#c9d6e4; }
     .ref-link { text-decoration:none; color:#1a73e8; font-weight:600; }
     .ref-meta { font-size:13px; color:#555; margin-top:3px; }
+    
+    /* Scrollable container */
+    .ref-container {
+        max-height: calc(5 * 60px); /* ước lượng 5 link x 60px mỗi link */
+        overflow-y: auto;
+        padding-right: 5px;
+    }
     </style>
+    
+    <div class="ref-container">
     """
-    for ref in refs[:top_k]:
+    
+    for ref in refs:  # giữ tất cả refs, nhưng container scrollable
         data = ref.get("bm25") or ref.get("pinecone")
         law = data.get("law_title", "Không xác định luật")
         title = data.get("article_title", "Điều không xác định")
@@ -173,6 +183,9 @@ def chat_fn(session_id, gr_history, user_input, retrieval_cache, top_k=5):
             <div class="ref-meta">Nguồn: {law}</div>
         </div>
         """
+    
+    refs_html += "</div>"
+
 
     return session_id, gr_history, retrieval_cache, refs_html
 

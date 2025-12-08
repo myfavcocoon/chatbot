@@ -3,7 +3,7 @@
 import time
 from typing import List
 import google.generativeai as genai
-from config import GEMINI_API_KEY
+from .config import GEMINI_API_KEY
 
 
 def decontextualize_conversation(context: List[str], question: str, DEBUG: bool = False) -> str:
@@ -20,7 +20,7 @@ def decontextualize_conversation(context: List[str], question: str, DEBUG: bool 
 
     Hướng dẫn:
 
-    - Nếu câu hỏi đã đủ ý, độc lập, và rõ ràng → **giữ nguyên nguyên văn, không sửa một chữ nào**.
+    - Nếu câu hỏi đã đủ ý, độc lập, và rõ ràng → **giữ nguyên văn**.
     - Nếu câu hỏi thiếu thông tin tham chiếu trong hội thoại trước đó → bổ sung thông tin cần thiết để câu hỏi có thể hiểu được độc lập.
     - Nếu câu hỏi không liên quan đến luật (ví dụ small talk, hỏi chuyện ngoài luật) → giữ nguyên câu hỏi, không sửa.
     - Không lặp lại câu hỏi cũ.
@@ -73,6 +73,8 @@ if __name__ == "__main__":
         ("Nếu vi phạm thì phạt bao nhiêu", 
          "Người đại diện pháp luật của doanh nghiệp chịu trách nhiệm chính."),
         ("Mức phạt tối đa đối với hành vi xả thải trái phép là bao nhiêu?", 
+         "Mức phạt có thể lên tới 500 triệu đồng tùy theo loại vi phạm."),
+        ("Điều 5 khoản 3 luật doanh nghiệp quy định gì?", 
          "Mức phạt có thể lên tới 500 triệu đồng tùy theo loại vi phạm."),
         ("Ok cảm ơn bạn", 
          "kcj.")

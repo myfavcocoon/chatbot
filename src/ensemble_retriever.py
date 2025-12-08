@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 # ============================================================
 # RRF Ensemble
 # ============================================================
-def ensemble_rrf(bm25_results, pinecone_results, k=RRF_K, pinecone_weight=1.0, top_k=5, debug_print=False):
+def ensemble_rrf(bm25_results, pinecone_results, k=RRF_K, pinecone_weight=1.0, top_k=6, debug_print=False):
     scores = {}
     debug = {}
 
@@ -97,7 +97,7 @@ def extract_text(doc):
 # ============================================================
 # Build context
 # ============================================================
-def build_context(query, retrieval_cache, bm25_retriever=None, embedding_model=None, top_k=5, pinecone_weight=1.5):
+def build_context(query, retrieval_cache, bm25_retriever=None, embedding_model=None, top_k=6, pinecone_weight=1.5):
     query_vec = embed_text(query) if embedding_model else None
     cache_hit = False
     cosine_score = None
