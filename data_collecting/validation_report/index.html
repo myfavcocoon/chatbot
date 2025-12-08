@@ -1,0 +1,83 @@
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Data Validation Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        img {
+            max-width: 600px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+<h1>📊 Data Validation Dashboard</h1>
+
+<h2>1. Embedding Vector Norm Distribution</h2>
+<img src="hist_embeddings.png" />
+<img src="box_embeddings.png" />
+
+<h2>2. Cosine Similarity Heatmap (Duplicate Detection)</h2>
+<img src="heatmap_similarity.png" />
+
+<h2>3. Law Title Distribution</h2>
+<h3>Pie Chart</h3>
+<img src="pie_law_title.png" />
+<h3>Bar Chart</h3>
+<img src="bar_law_title.png" />
+
+<h2>4. Summary Stats</h2>
+<pre>{
+  "total_items": 15377,
+  "avg_norm": 1.0,
+  "min_norm": 0.9999998807907104,
+  "max_norm": 1.0000001192092896,
+  "law_title_counts": {
+    "Luật Đất đai 2024 số 31/2024/QH15 áp dụng năm 2025 mới nhất": 1548,
+    "Văn bản hợp nhất 67/VBHN-VPQH 2025 Luật Doanh nghiệp": 1183,
+    "Luật Bảo vệ môi trường 2020 số 72/2020/QH14 mới nhất áp dụng năm 2025 mới nhất": 1032,
+    "Bộ luật lao động 2019 số 45/2019/QH14 áp dụng 2025 mới nhất": 889,
+    "Luật Sở hữu trí tuệ 2005 số 50/2005/QH11 áp dụng 2024 mới nhất": 879,
+    "Luật Xây dựng 2014 số 50/2014/QH13 áp dụng 2025 mới nhất": 856,
+    "Luật quản lý thuế 2019 số 38/2019/QH14 áp dụng năm 2025 mới nhất": 779,
+    "Luật Bảo hiểm xã hội 2024 số 41/2024/QH15 áp dụng năm 2025 mới nhất": 694,
+    "Luật Chứng khoán năm 2019 số 54/2019/QH14 áp dụng năm 2025 mới nhất": 655,
+    "Nghị định 168/2025/NĐ-CP về đăng ký doanh nghiệp mới nhất": 637,
+    "Luật Kinh doanh bảo hiểm 2022 số 08/2022/QH15 áp dụng năm 2025 mới nhất": 541,
+    "Luật Phá sản 2014 số 51/2014/QH13 áp dụng 2024 mới nhất": 525,
+    "Nghị định 01/2021/NĐ-CP đăng ký doanh nghiệp": 494,
+    "Luật cạnh tranh năm 2018 số 23/2018/QH14 áp dụng 2025 mới nhất": 483,
+    "Luật Đầu tư 2020 số 61/2020/QH14 áp dụng năm 2025 mới nhất": 449,
+    "Luật Bảo vệ quyền lợi người tiêu dùng 2023 số 19/2023/QH15 áp dụng 2025 mới nhất": 378,
+    "Luật kế toán 2015 số 88/2015/QH13 áp dụng 2025": 365,
+    "Luật Phòng chống rửa tiền 2022 số 14/2022/QH15 áp dụng năm 2025 mới nhất": 316,
+    "Nghị định 121/2021/NĐ-CP kinh doanh trò chơi điện tử có thưởng cho người nước ngoài mới nhất": 309,
+    "Luật an toàn thông tin mạng 2015 số 86/2015/QH13 áp dụng 2025 mới nhất": 273,
+    "Luật Căn cước 2023 số 26/2023/QH15 áp dụng năm 2025 mới nhất": 265,
+    "Thông tư 05/2022/TT-BTC hướng dẫn tái cơ cấu doanh nghiệp không đủ điều kiện cổ phần hóa mới nhất": 247,
+    "Luật Giao dịch điện tử 2023 số 20/2023/QH15 áp dụng năm 2025 mới nhất": 243,
+    "Luật giá năm 2012 số 11/2012/QH13": 234,
+    "Luật Các tổ chức tín dụng 2024 số 32/2024/QH15  áp dụng năm 2025 mới nhất": 207,
+    "Luật an ninh mạng 2018 số 24/2018/QH14 áp dụng 2025 mới nhất": 203,
+    "Văn bản hợp nhất 03/VBHN-VPQH 2024 Luật Thuế thu nhập cá nhân": 173,
+    "Nghị định 80/2021/NĐ-CP hướng dẫn Luật Hỗ trợ doanh nghiệp nhỏ và vừa mới nhất": 142,
+    "Nghị định 38/2018/NĐ-CP quy định chi tiết đầu tư cho doanh nghiệp nhỏ và vừa khởi nghiệp sáng tạo mới nhất": 132,
+    "Luật phí và lệ phí 2015 số 97/2015/QH13 áp dụng 2025 mới nhất": 82,
+    "Thông tư 07/2022/TT-BTC bàn giao xử lý khoản nợ khi chuyển đổi sở hữu doanh nghiệp mới nhất": 81,
+    "Thông tư 124/2021/TT-BTC hướng dẫn cơ chế tài chính kèm theo Quyết định 1804/QĐ-TTg mới nhất": 49,
+    "Thông tư 20/2021/TT-BGTVT Quy chế phối hợp giữa doanh nghiệp được giao quản lý hạ tầng hàng không mới nhất": 30,
+    "Thông tư 76/2025/TT-BTC bãi bỏ thông tư tự vay tự trả doanh nghiệp nhà nước sở hữu trên 50% vốn mới nhất": 3,
+    "Thông tư 78/2025/TT-BTC bãi bỏ Thông tư 01/2020/TT-BKHĐT hướng dẫn phân loại hợp tác xã mới nhất": 1
+  }
+}</pre>
+
+</body>
+</html>
